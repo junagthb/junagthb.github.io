@@ -7,7 +7,14 @@
 </script>
 </head>
 <body>
-    <h1>My17App</h1>
+    <h1>My17App</h1><button id="login">Login dengan Pi</button>
+    <script>
+  document.getElementById("login").onclick = function () {
+    Pi.authenticate(["username"], function (auth) {
+      console.log(auth);
+    });
+  };
+</script>
     <p>Aplikasi saya sudah aktif.</p>
 </body>
 </html>
