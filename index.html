@@ -10,9 +10,22 @@
     <h1>My17App</h1><button id="login">Login dengan Pi</button>
     <p id="status"></p>
     <script>
-  document.getElementById("login").onclick = function () {
-    Pi.authenticate(["username"], function (auth) {
-      document.getElementById("status").innerText = "Login Pi berhasil.";
+document.getElementById("login").onclick = function () {
+    Pi.authenticate(
+        ["username"],
+        function (payment) {
+            console.log("Incomplete payment:", payment);
+        }
+    )
+    .then(function (auth) {
+        document.getElementById("status").innerText =
+            "Login Pi berhasil: " + auth.user.username;
+    })
+    .catch(function (error) {
+        document.getElementById("status").innerText =
+            "Login gagal: " + error;
+    });
+};
     });
   };
 </script>
