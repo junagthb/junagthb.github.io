@@ -8,10 +8,11 @@
 </head>
 <body>
     <h1>My17App</h1><button id="login">Login dengan Pi</button>
+    <p id="status"></p>
     <script>
   document.getElementById("login").onclick = function () {
     Pi.authenticate(["username"], function (auth) {
-      console.log(auth);
+      document.getElementById("status").innerText = "Login Pi berhasil.";
     });
   };
 </script>
