@@ -1,47 +1,87 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>M y17App</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>piDomain market</title>
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-
-  <script>
-    Pi.init({
-      version: "2.0",
-      sandbox: false
-    });
-  </script>
+  <style>
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: Arial, sans-serif;
+      background: #f5f2ff;
+      color: #252044;
+    }
+    main {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 24px;
+      background: white;
+      border-radius: 18px;
+      text-align: center;
+      box-shadow: 0 4px 18px #0001;
+    }
+    h1 { color: #6b35b5; }
+    button {
+      padding: 13px 20px;
+      margin: 10px 0;
+      border: 0;
+      border-radius: 10px;
+      background: #713bc1;
+      color: white;
+      font-size: 16px;
+    }
+    #status { overflow-wrap: anywhere; }
+  </style>
 </head>
-
 <body>
-  <h1>My17App</h1>
-
-  <button id="login">Login dengan Pi</button>
-
-  <p id="status">Belum login.</p>
-  <button id="pay">Bayar dengan Pi</button>
+  <main>
+    <h1>π piDomain market</h1>
+    <p>Temukan dan tampilkan domain Pi Network Anda.</p>
+    <button id="login">Login dengan Pi</button>
+    <p id="status">Belum login.</p>
+    <p>Pasar domain sedang dalam tahap pengembangan.</p>
+  </main>
 
   <script>
-    document.getElementById("login").onclick = function () {
+    const status = document.getElementById("status");
+    const loginButton = document.getElementById("login");
+    let piReady = false;
 
-      Pi.authenticate(
-        ["username","payments"],
-        function (payment) {
-          console.log("Incomplete payment:", payment);
-        }
-      )
-      .then(function (auth) {
-        document.getElementById("status").innerText =
-          "Login Pi berhasil: " + auth.user.username;
-      })
-      .catch(function (error) {
-        document.getElementById("status").innerText =
-          "Login gagal: " + error;
-        console.error(error);
-      });
+    try {
+      if (window.Pi) {
+        Pi.init({ version: "2.0", sandbox: false });
+        piReady = true;
+      } else {
+        status.textContent =
+          "Pi SDK belum tersedia. Buka website melalui Pi Browser.";
+      }
+    } catch (error) {
+      status.textContent = "Pi SDK gagal dimulai: " + error.message;
+    }
 
-    };
+    loginButton.addEventListener("click", async function () {
+      if (!piReady) {
+        status.textContent =
+          "Pi SDK belum tersedia. Coba buka melalui Pi Browser.";
+        return;
+      }
+
+      loginButton.disabled = true;
+      status.textContent = "Meminta izin login Pi...";
+
+      try {
+        const auth = await Pi.authenticate(["username"], function () {});
+        status.textContent =
+          "Login berhasil: " + auth.user.username;
+      } catch (error) {
+        status.textContent = "Login gagal: " + error.message;
+      } finally {
+        loginButton.disabled = false;
+      }
+    });
   </script>
 </body>
 </html>
