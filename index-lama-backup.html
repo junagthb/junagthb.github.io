@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>M y17App</title>
+
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+
+  <script>
+    Pi.init({
+      version: "2.0",
+      sandbox: false
+    });
+  </script>
+</head>
+
+<body>
+  <h1>My17App</h1>
+
+  <button id="login">Login dengan Pi</button>
+
+  <p id="status">Belum login.</p>
+  <button id="pay">Bayar dengan Pi</button>
+
+  <script>
+    document.getElementById("login").onclick = function () {
+
+      Pi.authenticate(
+        ["username","payments"],
+        function (payment) {
+          console.log("Incomplete payment:", payment);
+        }
+      )
+      .then(function (auth) {
+        document.getElementById("status").innerText =
+          "Login Pi berhasil: " + auth.user.username;
+      })
+      .catch(function (error) {
+        document.getElementById("status").innerText =
+          "Login gagal: " + error;
+        console.error(error);
+      });
+
+    };
+  </script>
+</body>
+</html>
