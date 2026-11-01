@@ -71,24 +71,30 @@ footer { text-align: center; color: #777; font-size: 13px; }
 
 <script>
 const domains = [
-  { name: "gaming.pi", bid: "175.72 Pi" },
-  { name: "17.pi", bid: "317.72 Pi" },
-  { name: "07.pi", bid: "227.72 Pi" },
-  { name: "qris.pi", bid: "51.72 Pi" },
-  { name: "itlg.pi", bid: "117 Pi" }
+  { name: "gaming.pi" },
+  { name: "17.pi" },
+  { name: "07.pi" },
+  { name: "qris.pi" },
+  { name: "itlg.pi" }
 ];
+
+  
+  
+  
+
 
 const catalog = document.getElementById("catalog");
 
 domains.forEach(domain => {
   const item = document.createElement("div");
-  item.className = "domain";
+  
+
 
   const title = document.createElement("h3");
   title.textContent = domain.name;
 
-  const bid = document.createElement("p");
-  bid.textContent = "Tawaran lelang: " + domain.bid;
+  
+  
 
   const state = document.createElement("p");
   state.className = "state";
