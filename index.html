@@ -2,86 +2,140 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>piDomain market</title>
-  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-  <style>
-    body {
-      margin: 0;
-      padding: 24px;
-      font-family: Arial, sans-serif;
-      background: #f5f2ff;
-      color: #252044;
-    }
-    main {
-      max-width: 600px;
-      margin: 40px auto;
-      padding: 24px;
-      background: white;
-      border-radius: 18px;
-      text-align: center;
-      box-shadow: 0 4px 18px #0001;
-    }
-    h1 { color: #6b35b5; }
-    button {
-      padding: 13px 20px;
-      margin: 10px 0;
-      border: 0;
-      border-radius: 10px;
-      background: #713bc1;
-      color: white;
-      font-size: 16px;
-    }
-    #status { overflow-wrap: anywhere; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>piDomain market</title>
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 22px;
+  font-family: Arial, sans-serif;
+  background: #f5f2ff;
+  color: #29243b;
+}
+main {
+  max-width: 650px;
+  margin: 25px auto;
+  padding: 24px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 4px 18px #0001;
+}
+h1 { color: #713cb1; text-align: center; }
+.intro { text-align: center; line-height: 1.5; }
+button {
+  padding: 13px 20px;
+  border: 0;
+  border-radius: 10px;
+  background: #713cb1;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+.login { display: block; margin: 20px auto; }
+#status { text-align: center; overflow-wrap: anywhere; }
+.domain {
+  border: 1px solid #d8c8ee;
+  border-radius: 12px;
+  padding: 16px;
+  margin: 14px 0;
+}
+.domain h3 { color: #713cb1; margin-top: 0; }
+.state { color: #765b8d; font-size: 14px; }
+footer { text-align: center; color: #777; font-size: 13px; }
+</style>
 </head>
 <body>
-  <main>
-    <h1>π piDomain market</h1>
-    <p>Temukan dan tampilkan domain Pi Network Anda.</p>
-    <button id="login">Login dengan Pi</button>
-    <p id="status">Belum login.</p>
-    <p>Pasar domain sedang dalam tahap pengembangan.</p>
-  </main>
+<main>
+  <h1>π piDomain market</h1>
+  <p class="intro">
+    Temukan dan tampilkan domain Pi Network.
+    Satu tempat untuk melihat koleksi domain Pi.
+  </p>
 
-  <script>
-    const status = document.getElementById("status");
-    const loginButton = document.getElementById("login");
-    let piReady = false;
+  <button class="login" id="login">Login dengan Pi</button>
+  <p id="status">Belum login.</p>
 
-    try {
-      if (window.Pi) {
-        Pi.init({ version: "2.0", sandbox: false });
-        piReady = true;
-      } else {
-        status.textContent =
-          "Pi SDK belum tersedia. Buka website melalui Pi Browser.";
-      }
-    } catch (error) {
-      status.textContent = "Pi SDK gagal dimulai: " + error.message;
-    }
+  <h2>Katalog Domain Pi</h2>
+  <p>Daftar domain yang dimenangkan dalam lelang.</p>
 
-    loginButton.addEventListener("click", async function () {
-      if (!piReady) {
-        status.textContent =
-          "Pi SDK belum tersedia. Coba buka melalui Pi Browser.";
-        return;
-      }
+  <section id="catalog"></section>
 
-      loginButton.disabled = true;
-      status.textContent = "Meminta izin login Pi...";
+  <footer>
+    piDomain market — Katalog domain Pi Network.
+    Status klaim perlu diverifikasi melalui Pi Domains.
+  </footer>
+</main>
 
-      try {
-        const auth = await Pi.authenticate(["username"], function () {});
-        status.textContent =
-          "Login berhasil: " + auth.user.username;
-      } catch (error) {
-        status.textContent = "Login gagal: " + error.message;
-      } finally {
-        loginButton.disabled = false;
-      }
-    });
-  </script>
+<script>
+const domains = [
+  { name: "gaming.pi", bid: "175.72 Pi" },
+  { name: "17.pi", bid: "317.72 Pi" },
+  { name: "07.pi", bid: "227.72 Pi" },
+  { name: "qris.pi", bid: "51.72 Pi" },
+  { name: "itlg.pi", bid: "117 Pi" }
+];
+
+const catalog = document.getElementById("catalog");
+
+domains.forEach(domain => {
+  const item = document.createElement("div");
+  item.className = "domain";
+
+  const title = document.createElement("h3");
+  title.textContent = domain.name;
+
+  const bid = document.createElement("p");
+  bid.textContent = "Tawaran lelang: " + domain.bid;
+
+  const state = document.createElement("p");
+  state.className = "state";
+  state.textContent = "Menang lelang — status klaim belum dikonfirmasi.";
+
+  item.append(title, bid, state);
+  catalog.appendChild(item);
+});
+
+const status = document.getElementById("status");
+const loginButton = document.getElementById("login");
+let piReady = false;
+
+try {
+  if (window.Pi) {
+    Pi.init({ version: "2.0", sandbox: false });
+    piReady = true;
+  } else {
+    status.textContent =
+      "Pi SDK belum tersedia. Buka melalui Pi Browser.";
+  }
+} catch (error) {
+  status.textContent = "Pi SDK gagal dimulai: " + error.message;
+}
+
+loginButton.addEventListener("click", async function () {
+  if (!piReady) {
+    status.textContent = "Silakan buka melalui Pi Browser.";
+    return;
+  }
+
+  loginButton.disabled = true;
+  status.textContent = "Meminta izin login Pi...";
+
+  try {
+    const auth = await Pi.authenticate(
+      ["username"],
+      function () {}
+    );
+
+    status.textContent = "Login berhasil: " + auth.user.username;
+  } catch (error) {
+    status.textContent = "Login gagal: " + error.message;
+  } finally {
+    loginButton.disabled = false;
+  }
+});
+</script>
 </body>
 </html>
